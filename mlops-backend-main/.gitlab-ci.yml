@@ -1,0 +1,24 @@
+build-container:
+  stage: build
+  tags:
+    - docker1
+  image: docker:20.10.22-cli-alpine3.17
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -f Dockerfile -t $CI_IMAGE ./
+    - docker push $CI_IMAGE
+  variables:
+    CI_REGISTRY_USER: "admin"
+    CI_REGISTRY_PASSWORD: "Harbor12345"
+    CI_REGISTRY: "10.52.52.140:80"
+    CI_IMAGE: "10.52.52.140:80/library/mlops-backend:1.0.0"
+
+#deploy-container:
+#  stage: deploy
+#  tags:
+#    - docker
+#    - host
+#  image: docker:20.10.22-cli-alpine3.17
+#  script:
+#    - docker stack rm mlops-backend
+#    - docker stack deploy -c docker-compose.yml mlops-backend
